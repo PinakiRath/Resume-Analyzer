@@ -1,5 +1,6 @@
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import 'jspdf/dist/polyfills.es.js';
 
 // Function to generate PDF report for analysis results
 export const generateAnalysisReport = (resumeData, analysisData) => {
