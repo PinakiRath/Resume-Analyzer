@@ -54,6 +54,11 @@ body {
   background: #4f46e5;
 }
 
+/* Global Styles */
+.container {
+  @apply px-4 sm:px-6 lg:px-8;
+}
+
 /* Animation classes */
 .fade-in {
   animation: fadeIn 0.5s ease-in;
@@ -68,6 +73,47 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Enhanced spacing utilities */
+.space-y-8 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(2rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(2rem * var(--tw-space-y-reverse));
+}
+
+.space-y-12 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(3rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(3rem * var(--tw-space-y-reverse));
+}
+
+/* Better focus states */
+.focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5);
+}
+
+/* Improved typography */
+.font-display {
+  @apply font-bold;
+}
+
+.font-body {
+  @apply font-normal;
+}
+
+.text-hero {
+  @apply text-4xl md:text-5xl lg:text-6xl;
+}
+
+.text-headline {
+  @apply text-2xl md:text-3xl;
+}
+
+.text-subheadline {
+  @apply text-lg md:text-xl;
 }
 
 /* Progress bar styles */
@@ -101,12 +147,24 @@ body {
   @apply bg-primary hover:bg-primary-dark text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
 }
 
+.light .btn-primary {
+  @apply bg-indigo-600 hover:bg-indigo-700 text-white;
+}
+
 .btn-secondary {
   @apply bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
 }
 
+.light .btn-secondary {
+  @apply bg-gray-200 hover:bg-gray-300 text-gray-800;
+}
+
 .btn-success {
   @apply bg-success hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+}
+
+.light .btn-success {
+  @apply bg-green-500 hover:bg-green-600 text-white;
 }
 
 /* Card styles */
