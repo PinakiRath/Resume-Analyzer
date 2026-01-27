@@ -13,6 +13,7 @@ const ResumeUpload = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [analysisId, setAnalysisId] = useState(null);
+  const [isDragActive, setIsDragActive] = useState(false);
   
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -34,16 +35,51 @@ const ResumeUpload = () => {
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
-      if (selectedFile.type !== 'application/pdf') {
-        setError('Please upload a PDF file');
-        return;
-      }
-      if (selectedFile.size > 5 * 1024 * 1024) { // 5MB
-        setError('File size exceeds 5MB limit');
-        return;
-      }
-      setFile(selectedFile);
-      setError('');
+      validateAndSetFile(selectedFile);
+    }
+  };
+
+  const validateAndSetFile = (selectedFile) => {
+    // Clear previous error
+    setError('');
+    
+    if (selectedFile.type !== 'application/pdf') {
+      setError('Invalid file type. Please upload a PDF file.');
+      return false;
+    }
+    
+    if (selectedFile.size > 5 * 1024 * 1024) { // 5MB
+      setError('File size exceeds 5MB limit. Please upload a smaller file.');
+      return false;
+    }
+    
+    if (selectedFile.size === 0) {
+      setError('File is empty. Please select a valid file.');
+      return false;
+    }
+    
+    setFile(selectedFile);
+    return true;
+  };
+
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (e.type === 'dragenter' || e.type === 'dragover') {
+      setIsDragActive(true);
+    } else if (e.type === 'dragleave') {
+      setIsDragActive(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragActive(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      validateAndSetFile(e.dataTransfer.files[0]);
     }
   };
 
@@ -124,15 +160,18 @@ const ResumeUpload = () => {
         </div>
 
         {error && (
-          <div className="mb-6 p-3 bg-red-500/20 border border-red-500 rounded-lg text-red-200">
-            {error}
+          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-200 flex items-start">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+            <span>{error}</span>
           </div>
         )}
 
         {success && (
-          <div className="mb-6 p-3 bg-green-500/20 border border-green-500 rounded-lg text-green-200 flex items-center">
-            <CheckCircleIcon className="h-5 w-5 mr-2" />
-            Resume uploaded successfully! Analyzing your resume...
+          <div className="mb-6 p-4 bg-green-500/10 border border-green-500/30 rounded-lg text-green-200 flex items-start">
+            <CheckCircleIcon className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
+            <span>Resume uploaded successfully! Analyzing your resume...</span>
           </div>
         )}
 
@@ -142,13 +181,24 @@ const ResumeUpload = () => {
               Select Resume (PDF)
             </label>
             <div className="flex items-center justify-center w-full">
-              <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-600 rounded-lg cursor-pointer bg-dark-600 hover:bg-dark-500 transition-colors duration-200">
+              <label 
+                className={`flex flex-col items-center justify-center w-full h-64 rounded-lg cursor-pointer transition-colors duration-200 ${
+                  isDragActive 
+                    ? 'border-2 border-primary bg-primary/10' 
+                    : 'border-2 border-dashed border-gray-600 bg-dark-600 hover:bg-dark-500'
+                }`}
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
+                onDrop={handleDrop}
+              >
                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                   <ArrowUpTrayIcon className="h-10 w-10 text-gray-400 mb-3" />
                   <p className="mb-2 text-sm text-gray-400">
                     <span className="font-semibold">Click to upload</span> or drag and drop
                   </p>
                   <p className="text-xs text-gray-500">PDF (MAX. 5MB)</p>
+                  <p className="text-xs text-gray-500 mt-2">Supported formats: PDF</p>
                 </div>
                 <input 
                   type="file" 
@@ -159,11 +209,20 @@ const ResumeUpload = () => {
               </label>
             </div>
             {file && (
-              <div className="mt-2 text-sm text-gray-400 flex items-center">
-                <span className="truncate">{file.name}</span>
-                <span className="ml-2 text-xs bg-primary/20 text-primary px-2 py-1 rounded">
-                  {(file.size / 1024 / 1024).toFixed(2)} MB
-                </span>
+              <div className="mt-2 text-sm text-gray-400 flex items-center justify-between">
+                <div className="flex items-center">
+                  <span className="truncate max-w-xs">{file.name}</span>
+                  <span className="ml-2 text-xs bg-primary/20 text-primary px-2 py-1 rounded">
+                    {(file.size / 1024 / 1024).toFixed(2)} MB
+                  </span>
+                </div>
+                <button 
+                  type="button" 
+                  onClick={() => setFile(null)}
+                  className="text-red-500 hover:text-red-400 ml-2"
+                >
+                  Remove
+                </button>
               </div>
             )}
           </div>

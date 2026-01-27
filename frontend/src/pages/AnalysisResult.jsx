@@ -69,6 +69,30 @@ const AnalysisResult = () => {
     return 'bg-red-500';
   };
 
+  const getScoreGradient = (score) => {
+    if (score >= 80) return 'from-green-500 to-emerald-500';
+    if (score >= 60) return 'from-yellow-500 to-amber-500';
+    return 'from-red-500 to-orange-500';
+  };
+
+  const getScoreDescription = (score) => {
+    if (score >= 80) return 'Excellent - Your resume is highly ATS compatible';
+    if (score >= 60) return 'Good - Your resume is moderately ATS compatible';
+    return 'Needs Improvement - Your resume needs significant improvements for ATS compatibility';
+  };
+
+  const getMatchLevel = (percentage) => {
+    if (percentage >= 80) return 'High';
+    if (percentage >= 60) return 'Medium';
+    return 'Low';
+  };
+
+  const getMatchDescription = (percentage) => {
+    if (percentage >= 80) return 'Your resume strongly matches the job requirements';
+    if (percentage >= 60) return 'Your resume moderately matches the job requirements';
+    return 'Your resume has limited alignment with the job requirements';
+  };
+
   return (
     <div className="space-y-8">
       <motion.div
@@ -86,11 +110,11 @@ const AnalysisResult = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="card"
+        className="card p-8"
       >
         <div className="text-center">
-          <div className="relative inline-block">
-            <svg className="w-48 h-48" viewBox="0 0 100 100">
+          <div className="relative inline-block mb-4">
+            <svg className="w-56 h-56" viewBox="0 0 100 100">
               {/* Background circle */}
               <circle
                 cx="50"
@@ -120,7 +144,7 @@ const AnalysisResult = () => {
                 textAnchor="middle"
                 dy="0.3em"
                 fill="white"
-                fontSize="20"
+                fontSize="24"
                 fontWeight="bold"
               >
                 {analysisData.atsScore}%
@@ -130,9 +154,30 @@ const AnalysisResult = () => {
           <h2 className={`text-4xl font-bold mt-4 ${getScoreColor(analysisData.atsScore)}`}>
             ATS Score: {analysisData.atsScore}%
           </h2>
-          <p className="text-gray-400 mt-2">
-            Your resume's compatibility with ATS systems
+          <p className="text-gray-400 mt-2 mb-4 max-w-2xl mx-auto">
+            {getScoreDescription(analysisData.atsScore)}
           </p>
+          <div className="mt-6 pt-6 border-t border-gray-700">
+            <h3 className="text-lg font-medium text-white mb-3">Score Breakdown</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-white">{analysisData.matchPercentage}%</div>
+                <div className="text-sm text-gray-400">Job Match</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-white">{analysisData.skillsFound?.length || 0}</div>
+                <div className="text-sm text-gray-400">Skills Found</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-red-500">{analysisData.skillsMissing?.length || 0}</div>
+                <div className="text-sm text-gray-400">Skills Missing</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-white">{Object.keys(analysisData.sections || {}).filter(key => analysisData.sections[key]).length}</div>
+                <div className="text-sm text-gray-400">Sections Present</div>
+              </div>
+            </div>
+          </div>
         </div>
       </motion.div>
 
@@ -142,36 +187,45 @@ const AnalysisResult = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="card text-center"
+          className="card text-center p-6"
         >
-          <div className={`text-3xl font-bold ${getScoreColor(analysisData.matchPercentage)}`}>
+          <div className="text-5xl font-bold mb-2 bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
             {analysisData.matchPercentage}%
           </div>
-          <div className="text-gray-400 mt-2">Job Role Match</div>
+          <div className="text-gray-400 mb-1">Job Role Match</div>
+          <div className={`text-sm font-medium ${getScoreColor(analysisData.matchPercentage)}`}>
+            {getMatchLevel(analysisData.matchPercentage)} Match
+          </div>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="card text-center"
+          className="card text-center p-6"
         >
-          <div className="text-3xl font-bold text-white">
+          <div className="text-5xl font-bold text-white mb-2">
             {analysisData.skillsFound?.length || 0}
           </div>
-          <div className="text-gray-400 mt-2">Skills Found</div>
+          <div className="text-gray-400 mb-1">Skills Found</div>
+          <div className="text-sm text-gray-500">
+            In your resume
+          </div>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="card text-center"
+          className="card text-center p-6"
         >
-          <div className="text-3xl font-bold text-red-500">
+          <div className="text-5xl font-bold text-red-500 mb-2">
             {analysisData.skillsMissing?.length || 0}
           </div>
-          <div className="text-gray-400 mt-2">Skills Missing</div>
+          <div className="text-gray-400 mb-1">Skills Missing</div>
+          <div className="text-sm text-gray-500">
+            From job description
+          </div>
         </motion.div>
       </div>
 
@@ -180,7 +234,7 @@ const AnalysisResult = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.5 }}
-        className="card"
+        className="card p-6"
       >
         <h2 className="text-xl font-bold text-white mb-4">Skills Analysis</h2>
         
@@ -188,13 +242,15 @@ const AnalysisResult = () => {
           <div>
             <h3 className="font-medium text-green-500 mb-2 flex items-center">
               <CheckCircleIcon className="h-5 w-5 mr-2" />
-              Skills Found
+              Skills Found ({analysisData.skillsFound?.length || 0})
             </h3>
-            <div className="space-y-2">
+            <div className="space-y-2 max-h-64 overflow-y-auto pr-2">
               {analysisData.skillsFound?.map((skill, index) => (
-                <div key={index} className="flex items-center bg-dark-600 p-2 rounded">
-                  <CheckCircleIcon className="h-4 w-4 text-green-500 mr-2" />
-                  <span className="text-white">{skill}</span>
+                <div key={index} className="flex items-center bg-dark-600 p-3 rounded-lg transition-all duration-200 hover:bg-dark-500">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+                    <CheckCircleIcon className="h-4 w-4 text-green-500" />
+                  </div>
+                  <span className="text-white truncate">{skill}</span>
                 </div>
               ))}
             </div>
@@ -203,13 +259,15 @@ const AnalysisResult = () => {
           <div>
             <h3 className="font-medium text-red-500 mb-2 flex items-center">
               <XCircleIcon className="h-5 w-5 mr-2" />
-              Skills Missing
+              Skills Missing ({analysisData.skillsMissing?.length || 0})
             </h3>
-            <div className="space-y-2">
+            <div className="space-y-2 max-h-64 overflow-y-auto pr-2">
               {analysisData.skillsMissing?.map((skill, index) => (
-                <div key={index} className="flex items-center bg-dark-600 p-2 rounded">
-                  <XCircleIcon className="h-4 w-4 text-red-500 mr-2" />
-                  <span className="text-white">{skill}</span>
+                <div key={index} className="flex items-center bg-dark-600 p-3 rounded-lg transition-all duration-200 hover:bg-dark-500">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center mr-3">
+                    <XCircleIcon className="h-4 w-4 text-red-500" />
+                  </div>
+                  <span className="text-white truncate">{skill}</span>
                 </div>
               ))}
             </div>

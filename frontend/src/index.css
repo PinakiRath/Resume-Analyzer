@@ -116,6 +116,82 @@ body {
   @apply text-lg md:text-xl;
 }
 
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .container {
+    @apply px-4;
+  }
+  
+  .card {
+    @apply p-4;
+  }
+  
+  .text-hero {
+    @apply text-3xl;
+  }
+  
+  .text-headline {
+    @apply text-xl;
+  }
+  
+  .text-subheadline {
+    @apply text-base;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+  
+  .grid-cols-3 {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .grid-cols-4 {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .flex-col-mobile {
+    @apply flex-col;
+  }
+  
+  .space-y-8-mobile > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(2rem * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(2rem * var(--tw-space-y-reverse));
+  }
+}
+
+@media (max-width: 1024px) {
+  .grid-cols-5 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Better mobile touch targets */
+.btn-touch {
+  @apply min-h-[44px] min-w-[44px];
+}
+
+/* Scrollbar for mobile */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #9ca3af;
+  border-radius: 3px;
+}
+
 /* Progress bar styles */
 .progress-bar {
   height: 8px;
