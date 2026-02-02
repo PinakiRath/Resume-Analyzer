@@ -1,23 +1,34 @@
+require('dotenv').config();
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://127.0.0.1:27017/test')
-  .then(async () => {
-    console.log('Connected to MongoDB');
+async function cleanup() {
+  try {
+    if (!process.env.MONGO_URI) {
+      throw new Error("MONGO_URI not found in .env file");
+    }
+
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log('Connected to MongoDB Atlas');
 
     const db = mongoose.connection.db;
 
     try {
-      // Drop old username index
       await db.collection('users').dropIndex('username_1');
       console.log('Dropped old username index');
     } catch (err) {
       console.log('Index not found or already removed');
     }
 
-    // Remove bad null records
     const result = await db.collection('users').deleteMany({ username: null });
     console.log(`Deleted ${result.deletedCount} bad records`);
 
-    process.exit();
-  })
-  .catch(err => console.error(err));
+    console.log('Cleanup finished ✅');
+    process.exit(0);
+
+  } catch (err) {
+    console.error('Cleanup failed:', err.message);
+    process.exit(1);
+  }
+}
+
+cleanup();
