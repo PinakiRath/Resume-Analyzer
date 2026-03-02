@@ -1,10 +1,10 @@
-const Resume = require('../models/Resume');
-const Analysis = require('../models/Analysis');
-const fs = require('fs');
-const path = require('path');
-const pdfParse = require('pdf-parse');
-const { extractSkills, calculateATSScore, getJobRoleSkills } = require('../services/skillService');
-const { generateAIFeedback } = require('../services/aiService');
+import Resume from '../models/Resume.model.js';
+import Analysis from '../models/Analysis.model.js';
+import fs from 'fs';
+import path from 'path';
+import pdfParse from 'pdf-parse';
+import { extractSkills, calculateATSScore, getJobRoleSkills } from '../services/skillService.js';
+import { generateAIFeedback } from '../services/aiService.js';
 
 // @desc    Upload resume
 // @route   POST /api/resume/upload
@@ -211,13 +211,13 @@ const performAnalysis = async (resume, jobRole) => {
 const calculateKeywordDensity = (text, keywords) => {
   const words = text.split(/\s+/).filter(word => word.length > 0);
   const totalWords = words.length;
-  
+
   if (totalWords === 0) return 0;
-  
-  const foundKeywords = keywords.filter(keyword => 
+
+  const foundKeywords = keywords.filter(keyword =>
     text.includes(keyword.toLowerCase())
   ).length;
-  
+
   return Math.min(100, Math.round((foundKeywords / totalWords) * 100));
 };
 
@@ -226,16 +226,16 @@ const calculateFormattingQuality = (text) => {
   // This is a simplified implementation
   // In a real app, you'd analyze the raw PDF for formatting elements
   let quality = 100;
-  
+
   // Check for common formatting issues
   if (text.includes('  ')) quality -= 10; // Multiple spaces
   if (text.length < 500) quality -= 20; // Too short
   if (text.length > 5000) quality -= 10; // Too long
-  
+
   return Math.max(0, quality);
 };
 
-module.exports = {
+export {
   uploadResume,
   getResumeAnalysis,
   getResumeHistory

@@ -1,8 +1,4 @@
-const OpenAI = require('openai');
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+import OpenAI from 'openai';
 
 // Generate AI feedback for resume improvement
 const generateAIFeedback = async (resumeText, foundSkills, missingSkills, jobRole) => {
@@ -11,6 +7,10 @@ const generateAIFeedback = async (resumeText, foundSkills, missingSkills, jobRol
     if (!process.env.OPENAI_API_KEY) {
       return generateRuleBasedFeedback(foundSkills, missingSkills, jobRole);
     }
+
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY
+    });
 
     const prompt = `
     You are an expert ATS (Applicant Tracking System) and resume analyzer. 
@@ -108,7 +108,7 @@ const generateImprovementSuggestions = (resumeText, analysis) => {
   return suggestions;
 };
 
-module.exports = {
+export {
   generateAIFeedback,
   generateImprovementSuggestions
 };
