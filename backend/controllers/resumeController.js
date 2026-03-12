@@ -6,11 +6,15 @@ import pdfParse from 'pdf-parse';
 import { extractSkills, calculateATSScore, getJobRoleSkills } from '../services/skillService.js';
 import { generateAIFeedback } from '../services/aiService.js';
 
+
 // @desc    Upload resume
 // @route   POST /api/resume/upload
 // @access  Private
 const uploadResume = async (req, res) => {
   try {
+    console.log("BODY:", req.body);
+    console.log("FILE:", req.file);
+
     if (!req.file) {
       return res.status(400).json({
         success: false,

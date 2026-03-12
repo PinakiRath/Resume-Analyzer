@@ -1,7 +1,8 @@
+import dotenv from 'dotenv';
+dotenv.config({ path: './.env' });
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -9,7 +10,7 @@ import authRoutes from './routes/auth.js';
 import resumeRoutes from './routes/resume.js';
 import analysisRoutes from './routes/analysis.js';
 
-dotenv.config();
+
 
 const app = express();
 
@@ -28,11 +29,11 @@ app.use('/api/resume', resumeRoutes);
 app.use('/api/analysis', analysisRoutes);
 
 // Static frontend
-app.use(express.static(path.join(__dirname, '../frontend/dist')));
+// app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
-});
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+// });
 
 const PORT = process.env.PORT || 5000;
 
