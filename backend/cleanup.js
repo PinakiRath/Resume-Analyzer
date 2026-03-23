@@ -1,7 +1,5 @@
-import dotenv from 'dotenv';
-import mongoose from 'mongoose';
-
-dotenv.config();
+require('dotenv').config();
+const mongoose = require('mongoose');
 
 async function cleanup() {
   try {

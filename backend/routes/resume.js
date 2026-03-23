@@ -1,8 +1,8 @@
-import express from 'express';
-import multer from 'multer';
-import path from 'path';
-import { uploadResume, getResumeAnalysis, getResumeHistory } from '../controllers/resumeController.js';
-import { protect } from '../middlewares/auth.js';
+const express = require('express');
+const multer = require('multer');
+const path = require('path');
+const { uploadResume, getResumeAnalysis, getResumeHistory } = require('../controllers/resumeController');
+const { protect } = require('../middlewares/auth');
 
 const router = express.Router();
 
@@ -36,4 +36,4 @@ router.route('/upload').post(protect, upload.single('resume'), uploadResume);
 router.route('/history').get(protect, getResumeHistory);
 router.route('/:id').get(protect, getResumeAnalysis);
 
-export default router;
+module.exports = router;

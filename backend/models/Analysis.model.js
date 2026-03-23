@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const analysisSchema = new mongoose.Schema({
   resumeId: {
@@ -84,5 +84,4 @@ const analysisSchema = new mongoose.Schema({
   timestamps: true
 });
 
-const Analysis = mongoose.model('Analysis', analysisSchema);
-export default Analysis;
+module.exports = mongoose.model('Analysis', analysisSchema);

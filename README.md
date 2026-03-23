@@ -18,7 +18,7 @@ An AI-powered resume analyzer that helps job seekers optimize their resumes for 
 - **Authentication**: JWT
 - **File Upload**: Multer
 - **PDF Processing**: pdf-parse
-- **AI Integration**: Google Gemini API
+- **AI Integration**: OpenAI API
 - **UI Components**: Heroicons
 - **State Management**: React Query
 
@@ -41,7 +41,7 @@ npm install
 PORT=5000
 MONGODB_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
-GEMINI_API_KEY=your_gemini_api_key
+OPENAI_API_KEY=your_openai_api_key
 ```
 
 4. Start the backend server:
@@ -88,7 +88,7 @@ npm run dev
 - `PORT`: Port for the backend server (default: 5000)
 - `MONGODB_URI`: MongoDB connection string
 - `JWT_SECRET`: Secret key for JWT token generation
-- `GEMINI_API_KEY`: Google Gemini API key for AI-powered - feedback (optional)
+- `OPENAI_API_KEY`: OpenAI API key for AI feedback (optional)
 
 ## Project Structure
 
@@ -142,7 +142,7 @@ The ATS scoring algorithm considers multiple factors:
 The system uses a comprehensive skill dictionary with role-specific skills and flexible matching to identify both present and missing skills.
 
 ### AI Feedback
-When a Gemini API key is provided, the system generates personalized improvement suggestions based on the resume content and target role.
+When OpenAI API key is provided, the system generates personalized improvement suggestions based on the resume content and target role.
 
 ## Contributing
 
@@ -152,3 +152,7 @@ When a Gemini API key is provided, the system generates personalized improvement
 4. Commit your changes (`git commit -m 'Add some amazing feature'`)
 5. Push to the branch (`git push origin feature/amazing-feature`)
 6. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License.

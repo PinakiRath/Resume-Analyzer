@@ -1,7 +1,7 @@
 // Predefined skill dictionaries for different job roles
 const jobRoleSkills = {
   'Frontend Developer': [
-    'JavaScript', 'React', 'Vue.js', 'Angular', 'HTML', 'CSS',
+    'JavaScript', 'React', 'Vue.js', 'Angular', 'HTML', 'CSS', 
     'TypeScript', 'jQuery', 'SASS', 'LESS', 'Webpack', 'Babel',
     'RESTful APIs', 'Git', 'Responsive Design', 'CSS Frameworks',
     'Testing', 'Jest', 'Cypress', 'Enzyme', 'Next.js', 'Redux',
@@ -84,7 +84,7 @@ const getJobRoleSkills = (jobRole) => {
   const role = Object.keys(jobRoleSkills).find(
     key => key.toLowerCase() === jobRole.toLowerCase()
   );
-
+  
   return role ? jobRoleSkills[role] : jobRoleSkills['Full Stack Developer']; // Default to Full Stack
 };
 
@@ -102,10 +102,10 @@ const extractSkills = (resumeText, requiredSkills) => {
 
   requiredSkills.forEach(skill => {
     const skillLower = skill.toLowerCase();
-
+    
     // Check for the skill in the text (with flexible matching)
     const skillFound = checkSkillInText(normalizedText, skillLower);
-
+    
     if (skillFound) {
       foundSkills.push(skill);
     } else {
@@ -120,7 +120,7 @@ const extractSkills = (resumeText, requiredSkills) => {
 const checkSkillInText = (text, skill) => {
   // Handle special cases for common skill variations
   const variations = getSkillVariations(skill);
-
+  
   for (const variation of variations) {
     // Create a regex pattern that matches the skill as a whole word
     const regex = new RegExp(`\\b${escapeRegExp(variation)}\\b`, 'i');
@@ -128,17 +128,17 @@ const checkSkillInText = (text, skill) => {
       return true;
     }
   }
-
+  
   return false;
 };
 
 // Get variations of a skill name for better matching
 const getSkillVariations = (skill) => {
   const variations = [skill];
-
+  
   // Add common variations
   const skillLower = skill.toLowerCase();
-
+  
   if (skillLower.includes('javascript')) {
     variations.push('js', 'javascript');
   } else if (skillLower.includes('node.js')) {
@@ -164,7 +164,7 @@ const getSkillVariations = (skill) => {
   } else if (skillLower.includes('sql')) {
     variations.push('mysql', 'postgresql', 'mssql');
   }
-
+  
   return variations;
 };
 
@@ -186,7 +186,7 @@ const calculateATSScore = (resumeText, foundSkills, missingSkills, jobRole) => {
 
   // Calculate skill match score (0-100)
   const totalRequiredSkills = foundSkills.length + missingSkills.length;
-  const skillMatchScore = totalRequiredSkills > 0
+  const skillMatchScore = totalRequiredSkills > 0 
     ? Math.round((foundSkills.length / totalRequiredSkills) * 100)
     : 0;
 
@@ -203,7 +203,7 @@ const calculateATSScore = (resumeText, foundSkills, missingSkills, jobRole) => {
   const lengthScore = calculateLengthScore(resumeText);
 
   // Calculate final ATS score
-  let atsScore =
+  let atsScore = 
     (skillMatchScore * weights.skillMatch) +
     (keywordDensityScore * weights.keywordDensity) +
     (sectionsScore * weights.sections) +
@@ -219,42 +219,42 @@ const calculateATSScore = (resumeText, foundSkills, missingSkills, jobRole) => {
 // Apply ATS-specific adjustments
 const applyATSSpecificAdjustments = (score, resumeText, foundSkills, missingSkills) => {
   let adjustedScore = score;
-
+  
   // Penalty for special characters that might confuse ATS
-  const specialCharCount = (resumeText.match(/[!@#$%^&*()_+=\[\]{}|;':",.<>?~`]/g) || []).length;
+  const specialCharCount = (resumeText.match(/[!@#$%^&*()_+=\[\]{}|;':",./<>?~`]/g) || []).length;
   if (specialCharCount > 50) {
     adjustedScore -= 10; // Too many special characters
   }
-
+  
   // Bonus for including contact information
   if (resumeText.toLowerCase().includes('email') && resumeText.toLowerCase().includes('@') &&
-    resumeText.toLowerCase().includes('phone') && resumeText.match(/\d{3}[-.\s]?\d{3}[-.\s]?\d{4}/)) {
+      resumeText.toLowerCase().includes('phone') && resumeText.match(/\d{3}[-.\s]?\d{3}[-.\s]?\d{4}/)) {
     adjustedScore += 5;
   }
-
+  
   // Penalty for missing important sections
   if (!resumeText.toLowerCase().includes('experience') && !resumeText.toLowerCase().includes('work')) {
     adjustedScore -= 10;
   }
-
+  
   // Penalty for very short skill section
   const skillSectionMatch = resumeText.toLowerCase().match(/skills[\s\S]*?(?=\n\n|education|experience|$)/i);
   if (skillSectionMatch && skillSectionMatch[0].length < 50) {
     adjustedScore -= 5; // Skills section too short
   }
-
+  
   // Bonus for including metrics and numbers (indicates quantified achievements)
   const numberCount = (resumeText.match(/\b\d+\b/g) || []).length;
   if (numberCount > 10) {
     adjustedScore += 5; // Good use of metrics
   }
-
+  
   // Penalty for excessive length without substance
   const wordCount = resumeText.split(/\s+/).filter(word => word.length > 0).length;
   if (wordCount > 800 && foundSkills.length < 10) {
     adjustedScore -= 5; // Too long without enough skills
   }
-
+  
   return Math.max(0, Math.min(100, adjustedScore));
 };
 
@@ -262,9 +262,9 @@ const applyATSSpecificAdjustments = (score, resumeText, foundSkills, missingSkil
 const calculateKeywordDensityScore = (text, keywords) => {
   const words = text.split(/\s+/).filter(word => word.length > 0);
   const totalWords = words.length;
-
+  
   if (totalWords === 0) return 0;
-
+  
   // Count occurrences of relevant keywords
   let keywordCount = 0;
   keywords.forEach(keyword => {
@@ -274,10 +274,10 @@ const calculateKeywordDensityScore = (text, keywords) => {
       keywordCount += matches.length;
     }
   });
-
+  
   // Calculate density as percentage (optimal range is usually 1-3%)
   const density = (keywordCount / totalWords) * 100;
-
+  
   // Normalize to 0-100 scale (optimal around 2%)
   if (density > 3) {
     // Too high density, penalize
@@ -300,16 +300,16 @@ const calculateSectionsScore = (text) => {
     'skills', 'technologies', 'technical', 'competencies',
     'contact', 'email', 'phone', 'address'
   ];
-
+  
   let foundSections = 0;
-
+  
   sections.forEach(section => {
     const regex = new RegExp(`\\b${section}\\b`, 'i');
     if (regex.test(text)) {
       foundSections++;
     }
   });
-
+  
   // Calculate score based on how many sections were found (max 5 sections)
   return Math.round((foundSections / 5) * 100);
 };
@@ -318,34 +318,34 @@ const calculateSectionsScore = (text) => {
 const calculateFormattingScore = (text) => {
   // Check for formatting elements that ATS systems prefer
   let score = 100;
-
+  
   // Penalize for common formatting issues
   if (text.includes('  ')) score -= 10; // Multiple spaces
   if (text.includes('\t')) score -= 10; // Tabs
   if (text.includes('  ')) score -= 5; // Extra spaces
-
+  
   // Bonus for clean structure
   if (text.includes('\n')) score += 5; // Proper line breaks
   if (text.includes(':')) score += 5; // Proper section separation
-
+  
   return Math.max(0, Math.min(100, score));
 };
 
 // Calculate length score
 const calculateLengthScore = (text) => {
   const wordCount = text.split(/\s+/).filter(word => word.length > 0).length;
-
+  
   // Optimal resume length is typically 200-600 words
   if (wordCount < 100) return 30; // Too short
   if (wordCount > 1000) return 40; // Too long
   if (wordCount >= 200 && wordCount <= 600) return 100; // Optimal
   if (wordCount >= 100 && wordCount < 200) return 70; // Short but acceptable
   if (wordCount > 600 && wordCount <= 1000) return 80; // Long but acceptable
-
+  
   return 50; // Default
 };
 
-export {
+module.exports = {
   extractSkills,
   calculateATSScore,
   getJobRoleSkills
