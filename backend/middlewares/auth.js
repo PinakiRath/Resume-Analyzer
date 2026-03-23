@@ -1,8 +1,7 @@
 import jwt from 'jsonwebtoken';
-import { User } from '../models/User.model.js';
+import User from '../models/User.model.js';
 
-
-exports.protect = async (req, res, next) => {
+export const protect = async (req, res, next) => {
   let token;
 
   // Check for token in headers
